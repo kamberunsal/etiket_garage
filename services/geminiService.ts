@@ -1,21 +1,10 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import { ChatMessage } from "../types";
 
-// Initialize Gemini Client safely
-// We handle the case where 'process' might not be defined in a pure browser environment
-const getApiKey = (): string => {
-  try {
-    // Check if process is defined (Node-like env or bundler injected)
-    if (typeof process !== 'undefined' && process.env) {
-      return process.env.API_KEY || '';
-    }
-    return ''; 
-  } catch (e) {
-    return '';
-  }
-};
-
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
+// Initialize Gemini Client
+// The API key must be obtained exclusively from the environment variable process.env.API_KEY.
+// Assume this variable is pre-configured, valid, and accessible.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
 Sen "Etiket Garage"ın yapay zeka asistanısın. 
@@ -31,7 +20,7 @@ let chatSession: Chat | null = null;
 
 export const initializeChat = (): void => {
   try {
-    if (!getApiKey()) return; // Don't init if no key
+    if (!process.env.API_KEY) return; // Don't init if no key
     
     chatSession = ai.chats.create({
       model: 'gemini-3-flash-preview',
@@ -46,7 +35,7 @@ export const initializeChat = (): void => {
 };
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
-  if (!getApiKey()) return "Sistem şu anda bakımda. (API Anahtarı eksik)";
+  if (!process.env.API_KEY) return "Sistem şu anda bakımda. (API Anahtarı eksik)";
   
   if (!chatSession) {
     initializeChat();
@@ -69,7 +58,7 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
 
 // Updated to accept aspect ratio. Default is 16:9
 export const generateImage = async (prompt: string, aspectRatio: "16:9" | "9:16" = "16:9"): Promise<string | null> => {
-  if (!getApiKey()) {
+  if (!process.env.API_KEY) {
     console.warn("Skipping image generation: No API Key");
     return null;
   }
