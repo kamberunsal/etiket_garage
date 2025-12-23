@@ -3,7 +3,12 @@ import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SectionId } from '../types';
 
-const NavLink = ({ item, onClick }: { item: { name: string; id: SectionId }; onClick: (id: SectionId) => void }) => (
+interface NavLinkProps {
+  item: { name: string; id: SectionId };
+  onClick: (id: SectionId) => void;
+}
+
+const NavLink: React.FC<NavLinkProps> = ({ item, onClick }) => (
   <button
     onClick={() => onClick(item.id)}
     className="font-display text-[10px] md:text-xs lg:text-sm font-bold text-gray-300 hover:text-brand-yellow transition-colors duration-200 tracking-widest relative group uppercase whitespace-nowrap"

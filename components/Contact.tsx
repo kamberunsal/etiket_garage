@@ -9,7 +9,7 @@ export const Contact: React.FC = () => {
   useEffect(() => {
     const loadContactImage = async () => {
       const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'contact_bg_mobile_v4' : 'contact_bg_desktop_v4';
+      const cacheKey = isMobile ? 'contact_bg_mobile_v7_mix' : 'contact_bg_desktop_v7_mix';
 
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -22,13 +22,13 @@ export const Contact: React.FC = () => {
       let fallbackUrl = "";
 
       if (isMobile) {
-        prompt = "Vertical shot of city street at twilight, rear view of luxury car with glowing red taillights, cinematic, vertical composition, 8k.";
+        prompt = "Vertical shot of city street at night, rear view of a black sports car with bright red glowing taillights, blurred orange street lights in background, cinematic 8k.";
         ratio = "9:16";
-        fallbackUrl = "https://images.unsplash.com/photo-1503376763036-066120622c74?q=80&w=1974&auto=format&fit=crop"; // Night city road vertical
+        fallbackUrl = "https://images.unsplash.com/photo-1542223616-9de78bd9f1f4?q=80&w=1974&auto=format&fit=crop"; // Warm night city vertical
       } else {
-        prompt = "City street at twilight with a luxury car, bokeh city lights in background, vibrant red taillights glowing, cinematic, atmospheric, distinct silhouette.";
+        prompt = "City street at night with a luxury car, prominent red taillights, bokeh orange city lights in background, cinematic, atmospheric.";
         ratio = "16:9";
-        fallbackUrl = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2047&auto=format&fit=crop"; // Night city car
+        fallbackUrl = "https://images.unsplash.com/photo-1549556238-04d306e98188?q=80&w=2070&auto=format&fit=crop"; // Warm night city horizontal
       }
 
       let image = await generateImage(prompt, ratio);
@@ -49,7 +49,7 @@ export const Contact: React.FC = () => {
   }, []);
 
   return (
-    <section id={SectionId.CONTACT} className="relative py-16 md:py-24 bg-[#0a0a0a] border-t border-brand-red/10 overflow-hidden">
+    <section id={SectionId.CONTACT} className="relative py-16 md:py-24 bg-[#050505] border-t border-brand-red/10 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
           {contactBg && (

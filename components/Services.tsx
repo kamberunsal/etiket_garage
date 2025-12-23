@@ -9,37 +9,37 @@ const services = [
     icon: <Shield className="h-8 w-8 md:h-10 md:w-10" />,
     title: "PPF Kaplama",
     desc: "Yüksek teknoloji poliüretan filmler ile aracınızı taş, çizik ve çevresel etkilere karşı zırhlayın.",
-    accent: "border-brand-red"
+    accent: "border-brand-yellow" // Orange
   },
   {
     icon: <Hammer className="h-8 w-8 md:h-10 md:w-10" />,
     title: "Boyasız Göçük Düzeltme",
     desc: "Aracınızın orijinalliğini bozmadan, dolu hasarı ve park göçüklerini PDR tekniği ile kusursuz onarıyoruz.",
-    accent: "border-brand-yellow"
+    accent: "border-brand-red" // Red
   },
   {
     icon: <Sparkles className="h-8 w-8 md:h-10 md:w-10" />,
     title: "Seramik Kaplama",
     desc: "Derin parlaklık ve hidrofobik etki. Aracınızın boyasını kimyasallara ve UV ışınlarına karşı mühürleyin.",
-    accent: "border-brand-red"
+    accent: "border-brand-yellow"
   },
   {
     icon: <CarFront className="h-8 w-8 md:h-10 md:w-10" />,
     title: "Detaylı Temizlik",
     desc: "Motor, iç mekan ve dış yüzeyde sterilizasyon ve show-room temizliği.",
-    accent: "border-brand-yellow"
+    accent: "border-brand-red"
   },
   {
     icon: <Layers className="h-8 w-8 md:h-10 md:w-10" />,
     title: "Renk Değişim",
     desc: "Özel seri folyolar ile aracınıza tamamen yeni bir kimlik ve mat/metalik dokular kazandırın.",
-    accent: "border-brand-red"
+    accent: "border-brand-yellow"
   },
   {
     icon: <Sun className="h-8 w-8 md:h-10 md:w-10" />,
     title: "Cam Filmi",
     desc: "UV koruması ve ısı reddi sağlayan yüksek performanslı cam filmleri ile konforunuzu artırın.",
-    accent: "border-brand-yellow"
+    accent: "border-brand-red"
   }
 ];
 
@@ -49,7 +49,7 @@ export const Services: React.FC = () => {
   useEffect(() => {
     const loadServiceImage = async () => {
       const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'services_bg_mobile_v4' : 'services_bg_desktop_v4';
+      const cacheKey = isMobile ? 'services_bg_mobile_v7_mix' : 'services_bg_desktop_v7_mix';
       
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -62,13 +62,13 @@ export const Services: React.FC = () => {
       let fallbackUrl = "";
 
       if (isMobile) {
-        prompt = "Vertical macro abstract shot of car paint curves, red and platinum reflections, vertical composition, intense detail, 8k.";
+        prompt = "Vertical macro abstract shot of car paint curves, carbon fiber details, with intertwined orange and red light reflections, dark background, 8k.";
         ratio = "9:16";
-        fallbackUrl = "https://images.unsplash.com/photo-1600706432502-7634351eeed5?q=80&w=1974&auto=format&fit=crop"; // Abstract Red Car Detail Vertical
+        fallbackUrl = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1974&auto=format&fit=crop"; 
       } else {
-        prompt = "Macro close-up abstract shot of a car's glossy paint curve, distinct reflections, studio lighting, high contrast, platinum and red accents, automotive art, bright highlights.";
+        prompt = "Macro close-up abstract shot of a car's glossy paint curve and carbon fiber, dual lighting with orange and red highlights, automotive art, high contrast.";
         ratio = "16:9";
-        fallbackUrl = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop"; // Abstract Car Detail
+        fallbackUrl = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop"; 
       }
 
       let image = await generateImage(prompt, ratio);
@@ -113,7 +113,7 @@ export const Services: React.FC = () => {
           <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white">
             TEKNOLOJİK <span className="text-brand-red">ÇÖZÜMLER</span>
           </h3>
-          <div className="h-1 w-24 bg-brand-red mx-auto mt-6"></div>
+          <div className="h-1 w-24 bg-gradient-to-r from-brand-yellow to-brand-red mx-auto mt-6"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -126,7 +126,7 @@ export const Services: React.FC = () => {
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className={`group relative bg-brand-gray/80 backdrop-blur-md p-6 md:p-6 lg:p-8 border-l-4 ${service.accent} hover:bg-[#252525] transition-all duration-300 hover:-translate-y-2 border border-white/5 shadow-lg`}
             >
-              <div className={`mb-4 md:mb-6 p-3 md:p-4 rounded-full bg-brand-dark inline-block group-hover:scale-110 transition-transform duration-300 ${service.accent === 'border-brand-red' ? 'text-brand-red shadow-[0_0_15px_rgba(168,5,52,0.3)]' : 'text-brand-yellow shadow-[0_0_15px_rgba(253,184,19,0.3)]'}`}>
+              <div className={`mb-4 md:mb-6 p-3 md:p-4 rounded-full bg-brand-dark inline-block group-hover:scale-110 transition-transform duration-300 ${service.accent === 'border-brand-red' ? 'text-brand-red shadow-[0_0_15px_rgba(207,0,0,0.3)]' : 'text-brand-yellow shadow-[0_0_15px_rgba(255,107,0,0.3)]'}`}>
                 {service.icon}
               </div>
               <h4 className="text-lg md:text-xl font-display font-bold text-white mb-3 md:mb-4 group-hover:text-brand-yellow transition-colors">

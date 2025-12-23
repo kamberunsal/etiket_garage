@@ -12,8 +12,8 @@ export const Hero: React.FC = () => {
       // 1. Detect Screen Size
       const isMobile = window.innerWidth < 768;
       
-      // 2. Define Cache Key based on device
-      const cacheKey = isMobile ? 'hero_bg_mobile_v5' : 'hero_bg_desktop_v5';
+      // 2. Define Cache Key based on device (v7 for Orange/Red theme)
+      const cacheKey = isMobile ? 'hero_bg_mobile_v7_mix' : 'hero_bg_desktop_v7_mix';
       
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -24,17 +24,17 @@ export const Hero: React.FC = () => {
       // 3. Customize Prompt & Aspect Ratio for Mobile
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
-      // Fallback URLs (High quality unsplash images)
+      // Fallback URLs (Orange/Red themed)
       let fallbackUrl = "";
 
       if (isMobile) {
-         prompt = "Vertical cinematic shot of a futuristic super car front view, positioned at the bottom half of the frame. High-tech garage background, dark moody lighting with red neon accents. Top half empty for text overlay. 8k, photorealistic.";
+         prompt = "Vertical cinematic shot of a matte black hypercar front view. Split lighting: intense orange neon on the left, aggressive red neon on the right. Dark, smoky garage atmosphere. 8k, photorealistic.";
          ratio = "9:16";
-         fallbackUrl = "https://images.unsplash.com/photo-1605515298946-d062f2e9da53?q=80&w=1964&auto=format&fit=crop"; // Vertical dark car
+         fallbackUrl = "https://images.unsplash.com/photo-1618359103063-4246b9766946?q=80&w=1964&auto=format&fit=crop"; // Dark moody car
       } else {
-         prompt = "A photorealistic, cinematic wide shot of a futuristic super car in a high-tech garage with professional studio lighting. Cool white and subtle red neon accents, 8k resolution, highly detailed, sharp focus, glossy reflections, not too dark.";
+         prompt = "A photorealistic, cinematic wide shot of a customized black super car in a futuristic garage. Dual tone lighting: vibrant orange overhead lights and red ground effects/underglow. Highly detailed, sharp focus, glossy reflections, aggressive stance.";
          ratio = "16:9";
-         fallbackUrl = "https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop"; // Wide luxury car
+         fallbackUrl = "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop"; // Car with warm/red lighting
       }
 
       // Try generating AI image
@@ -105,7 +105,7 @@ export const Hero: React.FC = () => {
         ) : (
           // Better Loading Placeholder - Visible Grid Pattern
           <div className="w-full h-full bg-brand-dark relative overflow-hidden">
-             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,107,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,107,0,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
              <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
           </div>
         )}
@@ -114,7 +114,8 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-brand-dark/30"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/80 via-transparent to-brand-dark/80"></div>
         
-        {/* Subtle red accent glow from bottom right */}
+        {/* Dual Accent Glows: Orange (Left) and Red (Right) */}
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-yellow/10 blur-[150px] rounded-full mix-blend-screen animate-pulse"></div>
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand-red/10 blur-[150px] rounded-full mix-blend-screen"></div>
         
         {/* Reduced noise opacity */}
@@ -136,7 +137,8 @@ export const Hero: React.FC = () => {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-black text-white leading-tight mb-4 md:mb-6 drop-shadow-2xl shadow-black">
             ARACINIZA <br className="hidden md:block" />
             DEĞER KATAN <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-red-500 drop-shadow-sm">ETİKET</span>
+            {/* Direct Orange Text (brand-yellow is defined as orange in config) */}
+            <span className="text-brand-yellow drop-shadow-sm">ETİKET</span>
           </h1>
           
           <p className="mt-2 md:mt-4 max-w-2xl text-base md:text-lg lg:text-xl text-gray-200 font-sans font-light leading-relaxed mx-auto lg:mx-0 drop-shadow-md bg-black/30 backdrop-blur-sm p-4 rounded-lg lg:bg-transparent lg:p-0">
@@ -145,20 +147,22 @@ export const Hero: React.FC = () => {
           </p>
 
           <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full sm:w-auto px-4 sm:px-0">
+            {/* Primary Button: Orange */}
             <button 
               onClick={() => smoothScrollTo(SectionId.SERVICES)}
-              className="w-full sm:w-auto group relative px-8 py-4 bg-brand-red overflow-hidden rounded-sm font-display font-bold tracking-wider text-white shadow-[0_0_20px_rgba(168,5,52,0.4)] hover:shadow-[0_0_30px_rgba(168,5,52,0.6)] transition-all duration-300"
+              className="w-full sm:w-auto group relative px-8 py-4 bg-brand-yellow overflow-hidden rounded-sm font-display font-bold tracking-wider text-black shadow-[0_0_20px_rgba(255,107,0,0.4)] hover:shadow-[0_0_30px_rgba(255,107,0,0.6)] transition-all duration-300"
             >
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></span>
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></span>
               <span className="flex items-center justify-center lg:justify-start">
                 HİZMETLERİ KEŞFET
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </button>
             
+            {/* Secondary Button: Red Border */}
             <button 
               onClick={() => smoothScrollTo(SectionId.CONTACT)}
-              className="w-full sm:w-auto px-8 py-4 border border-gray-500 hover:border-brand-yellow text-white hover:text-brand-yellow rounded-sm font-display font-bold tracking-wider transition-all duration-300 backdrop-blur-md bg-brand-dark/30 hover:bg-brand-yellow/10"
+              className="w-full sm:w-auto px-8 py-4 border border-gray-600 hover:border-brand-red text-white hover:text-brand-red rounded-sm font-display font-bold tracking-wider transition-all duration-300 backdrop-blur-md bg-brand-dark/30 hover:bg-brand-red/10"
             >
               RANDEVU AL
             </button>

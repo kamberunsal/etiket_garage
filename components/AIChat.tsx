@@ -59,15 +59,15 @@ export const AIChat: React.FC = () => {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button - Orange Background (Primary Call to Action) */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-40 bg-brand-red text-white p-4 rounded-full shadow-[0_0_20px_rgba(168,5,52,0.5)] hover:shadow-[0_0_30px_rgba(168,5,52,0.7)] transition-all duration-300 ${isOpen ? 'hidden' : 'flex'}`}
+        className={`fixed bottom-6 right-6 z-40 bg-brand-yellow text-black p-4 rounded-full shadow-[0_0_20px_rgba(255,107,0,0.5)] hover:shadow-[0_0_30px_rgba(255,107,0,0.7)] transition-all duration-300 ${isOpen ? 'hidden' : 'flex'}`}
       >
         <MessageSquare className="h-6 w-6" />
-        <span className="absolute top-0 right-0 h-3 w-3 bg-brand-yellow rounded-full animate-ping"></span>
+        <span className="absolute top-0 right-0 h-3 w-3 bg-brand-red rounded-full animate-ping"></span>
       </motion.button>
 
       {/* Chat Window */}
@@ -79,10 +79,10 @@ export const AIChat: React.FC = () => {
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
             className="fixed bottom-6 right-6 z-50 w-[90vw] md:w-[400px] h-[500px] bg-brand-gray border border-brand-red/30 rounded-lg shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
           >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-brand-red to-[#7a0426] p-4 flex justify-between items-center">
+            {/* Header - Gradient Orange to Red */}
+            <div className="bg-gradient-to-r from-brand-yellow to-brand-red p-4 flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <Cpu className="h-5 w-5 text-brand-yellow" />
+                <Cpu className="h-5 w-5 text-white" />
                 <div>
                   <h3 className="text-white font-display font-bold text-sm">ETIKET AI ASİSTAN</h3>
                   <div className="flex items-center space-x-1">
@@ -97,7 +97,7 @@ export const AIChat: React.FC = () => {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#151515]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#0a0a0a]">
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
@@ -106,8 +106,8 @@ export const AIChat: React.FC = () => {
                   <div
                     className={`max-w-[80%] p-3 rounded-lg text-sm leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-brand-red text-white rounded-br-none'
-                        : 'bg-brand-dark border border-gray-700 text-gray-300 rounded-bl-none'
+                        ? 'bg-brand-yellow text-black font-medium rounded-br-none' // User msg: Orange
+                        : 'bg-brand-gray border border-gray-700 text-gray-300 rounded-bl-none'
                     }`}
                   >
                     {msg.text}
@@ -116,7 +116,7 @@ export const AIChat: React.FC = () => {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-brand-dark border border-gray-700 p-3 rounded-lg rounded-bl-none flex space-x-1">
+                  <div className="bg-brand-gray border border-gray-700 p-3 rounded-lg rounded-bl-none flex space-x-1">
                     <span className="w-2 h-2 bg-brand-yellow rounded-full animate-bounce"></span>
                     <span className="w-2 h-2 bg-brand-yellow rounded-full animate-bounce delay-75"></span>
                     <span className="w-2 h-2 bg-brand-yellow rounded-full animate-bounce delay-150"></span>
@@ -140,7 +140,7 @@ export const AIChat: React.FC = () => {
                 <button
                   onClick={handleSend}
                   disabled={isLoading}
-                  className="bg-brand-yellow text-brand-dark p-2 rounded-md hover:bg-yellow-400 transition-colors disabled:opacity-50"
+                  className="bg-brand-yellow text-black p-2 rounded-md hover:bg-orange-500 transition-colors disabled:opacity-50"
                 >
                   <Send className="h-5 w-5" />
                 </button>
