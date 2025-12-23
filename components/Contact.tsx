@@ -11,12 +11,6 @@ export const Contact: React.FC = () => {
       const isMobile = window.innerWidth < 768;
       const cacheKey = isMobile ? 'contact_bg_mobile_v7_mix' : 'contact_bg_desktop_v7_mix';
 
-      const cachedImage = localStorage.getItem(cacheKey);
-      if (cachedImage) {
-        setContactBg(cachedImage);
-        return;
-      }
-
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
       let fallbackUrl = "";
@@ -31,18 +25,27 @@ export const Contact: React.FC = () => {
         fallbackUrl = "https://images.unsplash.com/photo-1549556238-04d306e98188?q=80&w=2070&auto=format&fit=crop"; // Warm night city horizontal
       }
 
-      let image = await generateImage(prompt, ratio);
-
-      if (!image) {
-        console.log("Using fallback image for Contact");
-        image = fallbackUrl;
+      // 1. Check Cache
+      const cachedImage = localStorage.getItem(cacheKey);
+      if (cachedImage) {
+        setContactBg(cachedImage);
+        return;
       }
-      
-      if (image) {
-        setContactBg(image);
-        try {
-          localStorage.setItem(cacheKey, image);
-        } catch (e) { console.warn("Storage full"); }
+
+      // 2. Set Fallback Immediately
+      setContactBg(fallbackUrl);
+
+      // 3. Try AI
+      try {
+        const image = await generateImage(prompt, ratio);
+        if (image) {
+          setContactBg(image);
+          try {
+            localStorage.setItem(cacheKey, image);
+          } catch (e) { console.warn("Storage full"); }
+        }
+      } catch (e) {
+        console.warn("Using fallback");
       }
     };
     loadContactImage();
@@ -56,11 +59,9 @@ export const Contact: React.FC = () => {
              <img 
              src={contactBg} 
              alt="Dark Car Silhouette" 
-             // Increased opacity to 25
              className="w-full h-full object-cover opacity-25"
            />
           )}
-          {/* Reduced overlay opacity */}
           <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-brand-dark/80"></div>
       </div>
 

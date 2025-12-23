@@ -11,12 +11,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     // Define global constants replacement
     define: {
-      // Fix for "process is not defined" in browser
-      'process.env': {
-        // Map VITE_API_KEY (from Render) or API_KEY to process.env.API_KEY
-        API_KEY: env.VITE_API_KEY || env.API_KEY,
-        NODE_ENV: env.NODE_ENV
-      }
+      // Safer definition that doesn't wipe out the entire process.env object
+      'process.env.API_KEY': JSON.stringify(env.VITE_API_KEY || env.API_KEY),
+      'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
     },
     build: {
       outDir: 'dist',

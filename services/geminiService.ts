@@ -1,9 +1,17 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import { ChatMessage } from "../types";
 
-// Initialize Gemini Client
+// Initialize Gemini Client Lazily
 // The API key must be obtained exclusively from the environment variable process.env.API_KEY.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let aiClient: GoogleGenAI | null = null;
+
+const getAiClient = (): GoogleGenAI => {
+  if (!aiClient) {
+    // Prevent crash if key is missing, handle valid check inside functions
+    aiClient = new GoogleGenAI({ apiKey: process.env.API_KEY || "dummy_key" });
+  }
+  return aiClient;
+};
 
 const SYSTEM_INSTRUCTION = `
 Sen "Etiket Garage"ın yapay zeka asistanısın. 
@@ -24,7 +32,7 @@ export const initializeChat = (): void => {
       return; 
     }
     
-    chatSession = ai.chats.create({
+    chatSession = getAiClient().chats.create({
       model: 'gemini-3-flash-preview',
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -65,30 +73,47 @@ export const generateImage = async (prompt: string, aspectRatio: "16:9" | "9:16"
     return null;
   }
 
+  const ai = getAiClient();
+
   try {
     console.log("Attempting to generate image...");
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
-      contents: {
-        parts: [
-          { text: prompt }
-        ]
-      },
-      config: {
-        imageConfig: {
-          aspectRatio: aspectRatio,
-        }
-      }
+    
+    // Create a timeout promise
+    const timeoutPromise = new Promise<null>((resolve) => {
+      setTimeout(() => {
+        console.warn("Image generation timed out");
+        resolve(null);
+      }, 10000); // 10 seconds timeout
     });
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        const base64EncodeString: string = part.inlineData.data;
-        console.log("Image generated successfully.");
-        return `data:image/png;base64,${base64EncodeString}`;
+    const generationPromise = (async () => {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+          parts: [
+            { text: prompt }
+          ]
+        },
+        config: {
+          imageConfig: {
+            aspectRatio: aspectRatio,
+          }
+        }
+      });
+
+      for (const part of response.candidates?.[0]?.content?.parts || []) {
+        if (part.inlineData) {
+          const base64EncodeString: string = part.inlineData.data;
+          console.log("Image generated successfully.");
+          return `data:image/png;base64,${base64EncodeString}`;
+        }
       }
-    }
-    return null;
+      return null;
+    })();
+
+    // Race between generation and timeout
+    return await Promise.race([generationPromise, timeoutPromise]);
+
   } catch (error) {
     console.error("Image Generation Error:", error);
     return null;

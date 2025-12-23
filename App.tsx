@@ -15,12 +15,6 @@ function App() {
       const isMobile = window.innerWidth < 768;
       const cacheKey = isMobile ? 'about_bg_mobile_v4' : 'about_bg_desktop_v4';
 
-      const cachedImage = localStorage.getItem(cacheKey);
-      if (cachedImage) {
-        setAboutBg(cachedImage);
-        return;
-      }
-
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
       let fallbackUrl = "";
@@ -35,18 +29,27 @@ function App() {
         fallbackUrl = "https://images.unsplash.com/photo-1550523000-843c08272559?q=80&w=2070&auto=format&fit=crop"; // Auto detail shop
       }
 
-      let image = await generateImage(prompt, ratio);
-      
-      if (!image) {
-        console.log("Using fallback image for About");
-        image = fallbackUrl;
+      // 1. Check Cache
+      const cachedImage = localStorage.getItem(cacheKey);
+      if (cachedImage) {
+        setAboutBg(cachedImage);
+        return;
       }
-      
-      if (image) {
-        setAboutBg(image);
-        try {
-          localStorage.setItem(cacheKey, image);
-        } catch (e) { console.warn("Storage full"); }
+
+      // 2. Set Fallback Immediately
+      setAboutBg(fallbackUrl);
+
+      // 3. Try AI
+      try {
+        const image = await generateImage(prompt, ratio);
+        if (image) {
+          setAboutBg(image);
+          try {
+            localStorage.setItem(cacheKey, image);
+          } catch (e) { console.warn("Storage full"); }
+        }
+      } catch (e) {
+        console.warn("Using fallback");
       }
     };
     loadAboutImage();

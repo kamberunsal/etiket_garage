@@ -51,12 +51,6 @@ export const Services: React.FC = () => {
       const isMobile = window.innerWidth < 768;
       const cacheKey = isMobile ? 'services_bg_mobile_v7_mix' : 'services_bg_desktop_v7_mix';
       
-      const cachedImage = localStorage.getItem(cacheKey);
-      if (cachedImage) {
-        setBgImage(cachedImage);
-        return;
-      }
-
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
       let fallbackUrl = "";
@@ -71,18 +65,27 @@ export const Services: React.FC = () => {
         fallbackUrl = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop"; 
       }
 
-      let image = await generateImage(prompt, ratio);
-      
-      if (!image) {
-        console.log("Using fallback image for Services");
-        image = fallbackUrl;
+      // 1. Check Cache
+      const cachedImage = localStorage.getItem(cacheKey);
+      if (cachedImage) {
+        setBgImage(cachedImage);
+        return;
       }
-      
-      if (image) {
-        setBgImage(image);
-        try {
-          localStorage.setItem(cacheKey, image);
-        } catch (e) { console.warn("Storage full"); }
+
+      // 2. Set Fallback Immediately
+      setBgImage(fallbackUrl);
+
+      // 3. Try AI
+      try {
+        const image = await generateImage(prompt, ratio);
+        if (image) {
+          setBgImage(image);
+          try {
+            localStorage.setItem(cacheKey, image);
+          } catch (e) { console.warn("Storage full"); }
+        }
+      } catch (e) {
+        console.warn("Using fallback due to error");
       }
     };
     loadServiceImage();
@@ -90,21 +93,18 @@ export const Services: React.FC = () => {
 
   return (
     <section id={SectionId.SERVICES} className="py-16 md:py-20 lg:py-24 bg-brand-dark relative overflow-hidden">
-      {/* Background Image - Abstract Car Curves */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
           {bgImage && (
              <img 
              src={bgImage}
              alt="Car Detail Background" 
-             // Increased opacity significantly
              className="w-full h-full object-cover opacity-30"
            />
           )}
-           {/* Reduced overlay opacity from 90 to 85 */}
            <div className="absolute inset-0 bg-brand-dark/85"></div>
       </div>
 
-      {/* Background Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 z-0"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -136,7 +136,6 @@ export const Services: React.FC = () => {
                 {service.desc}
               </p>
               
-              {/* Corner Accent */}
               <div className="absolute top-0 right-0 w-8 h-8 overflow-hidden">
                 <div className={`absolute top-0 right-0 w-2 h-2 ${service.accent === 'border-brand-red' ? 'bg-brand-red' : 'bg-brand-yellow'} rounded-bl-lg`}></div>
               </div>
