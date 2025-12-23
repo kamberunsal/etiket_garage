@@ -49,7 +49,7 @@ export const Services: React.FC = () => {
   useEffect(() => {
     const loadServiceImage = async () => {
       const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'services_bg_mobile_v3' : 'services_bg_desktop_v3';
+      const cacheKey = isMobile ? 'services_bg_mobile_v4' : 'services_bg_desktop_v4';
       
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -59,16 +59,24 @@ export const Services: React.FC = () => {
 
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
+      let fallbackUrl = "";
 
       if (isMobile) {
         prompt = "Vertical macro abstract shot of car paint curves, red and platinum reflections, vertical composition, intense detail, 8k.";
         ratio = "9:16";
+        fallbackUrl = "https://images.unsplash.com/photo-1600706432502-7634351eeed5?q=80&w=1974&auto=format&fit=crop"; // Abstract Red Car Detail Vertical
       } else {
         prompt = "Macro close-up abstract shot of a car's glossy paint curve, distinct reflections, studio lighting, high contrast, platinum and red accents, automotive art, bright highlights.";
         ratio = "16:9";
+        fallbackUrl = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop"; // Abstract Car Detail
       }
 
-      const image = await generateImage(prompt, ratio);
+      let image = await generateImage(prompt, ratio);
+      
+      if (!image) {
+        console.log("Using fallback image for Services");
+        image = fallbackUrl;
+      }
       
       if (image) {
         setBgImage(image);

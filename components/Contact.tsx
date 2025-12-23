@@ -9,7 +9,7 @@ export const Contact: React.FC = () => {
   useEffect(() => {
     const loadContactImage = async () => {
       const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'contact_bg_mobile_v3' : 'contact_bg_desktop_v3';
+      const cacheKey = isMobile ? 'contact_bg_mobile_v4' : 'contact_bg_desktop_v4';
 
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -19,16 +19,24 @@ export const Contact: React.FC = () => {
 
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
+      let fallbackUrl = "";
 
       if (isMobile) {
         prompt = "Vertical shot of city street at twilight, rear view of luxury car with glowing red taillights, cinematic, vertical composition, 8k.";
         ratio = "9:16";
+        fallbackUrl = "https://images.unsplash.com/photo-1503376763036-066120622c74?q=80&w=1974&auto=format&fit=crop"; // Night city road vertical
       } else {
         prompt = "City street at twilight with a luxury car, bokeh city lights in background, vibrant red taillights glowing, cinematic, atmospheric, distinct silhouette.";
         ratio = "16:9";
+        fallbackUrl = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2047&auto=format&fit=crop"; // Night city car
       }
 
-      const image = await generateImage(prompt, ratio);
+      let image = await generateImage(prompt, ratio);
+
+      if (!image) {
+        console.log("Using fallback image for Contact");
+        image = fallbackUrl;
+      }
       
       if (image) {
         setContactBg(image);

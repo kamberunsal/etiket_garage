@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     const loadAboutImage = async () => {
       const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'about_bg_mobile_v3' : 'about_bg_desktop_v3';
+      const cacheKey = isMobile ? 'about_bg_mobile_v4' : 'about_bg_desktop_v4';
 
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -23,16 +23,24 @@ function App() {
 
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
+      let fallbackUrl = "";
 
       if (isMobile) {
         prompt = "Vertical interior shot of modern high-end auto detailing studio, hexagonal lights on ceiling, clean polished floor reflection, 8k vertical.";
         ratio = "9:16";
+        fallbackUrl = "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1969&auto=format&fit=crop"; // Auto detail vertical
       } else {
         prompt = "Interior of a modern high-end auto detailing studio, bright hexagonal ceiling lights, clean reflections on polished floor, professional workshop environment, depth of field, well lit.";
         ratio = "16:9";
+        fallbackUrl = "https://images.unsplash.com/photo-1550523000-843c08272559?q=80&w=2070&auto=format&fit=crop"; // Auto detail shop
       }
 
-      const image = await generateImage(prompt, ratio);
+      let image = await generateImage(prompt, ratio);
+      
+      if (!image) {
+        console.log("Using fallback image for About");
+        image = fallbackUrl;
+      }
       
       if (image) {
         setAboutBg(image);

@@ -13,7 +13,7 @@ export const Hero: React.FC = () => {
       const isMobile = window.innerWidth < 768;
       
       // 2. Define Cache Key based on device
-      const cacheKey = isMobile ? 'hero_bg_mobile_v4' : 'hero_bg_desktop_v4';
+      const cacheKey = isMobile ? 'hero_bg_mobile_v5' : 'hero_bg_desktop_v5';
       
       const cachedImage = localStorage.getItem(cacheKey);
       if (cachedImage) {
@@ -24,22 +24,32 @@ export const Hero: React.FC = () => {
       // 3. Customize Prompt & Aspect Ratio for Mobile
       let prompt = "";
       let ratio: "16:9" | "9:16" = "16:9";
+      // Fallback URLs (High quality unsplash images)
+      let fallbackUrl = "";
 
       if (isMobile) {
-         // Mobile Prompt: Vertical, Car at bottom to leave room for text at top
          prompt = "Vertical cinematic shot of a futuristic super car front view, positioned at the bottom half of the frame. High-tech garage background, dark moody lighting with red neon accents. Top half empty for text overlay. 8k, photorealistic.";
          ratio = "9:16";
+         fallbackUrl = "https://images.unsplash.com/photo-1605515298946-d062f2e9da53?q=80&w=1964&auto=format&fit=crop"; // Vertical dark car
       } else {
-         // Desktop Prompt: Wide shot
          prompt = "A photorealistic, cinematic wide shot of a futuristic super car in a high-tech garage with professional studio lighting. Cool white and subtle red neon accents, 8k resolution, highly detailed, sharp focus, glossy reflections, not too dark.";
          ratio = "16:9";
+         fallbackUrl = "https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop"; // Wide luxury car
       }
 
-      const image = await generateImage(prompt, ratio);
+      // Try generating AI image
+      let image = await generateImage(prompt, ratio);
+      
+      // If AI fails, use fallback
+      if (!image) {
+        console.log("Using fallback image for Hero");
+        image = fallbackUrl;
+      }
       
       if (image) {
         setBgImage(image);
         try {
+          // Only cache if it's a data URL (AI generated), don't necessarily need to cache external URLs but it's fine
           localStorage.setItem(cacheKey, image);
         } catch (e) {
           console.warn("Storage full, cannot cache image");

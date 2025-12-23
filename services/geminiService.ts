@@ -3,7 +3,6 @@ import { ChatMessage } from "../types";
 
 // Initialize Gemini Client
 // The API key must be obtained exclusively from the environment variable process.env.API_KEY.
-// Assume this variable is pre-configured, valid, and accessible.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
@@ -20,7 +19,10 @@ let chatSession: Chat | null = null;
 
 export const initializeChat = (): void => {
   try {
-    if (!process.env.API_KEY) return; // Don't init if no key
+    if (!process.env.API_KEY) {
+      console.warn("Gemini API Key is missing.");
+      return; 
+    }
     
     chatSession = ai.chats.create({
       model: 'gemini-3-flash-preview',
@@ -59,11 +61,12 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
 // Updated to accept aspect ratio. Default is 16:9
 export const generateImage = async (prompt: string, aspectRatio: "16:9" | "9:16" = "16:9"): Promise<string | null> => {
   if (!process.env.API_KEY) {
-    console.warn("Skipping image generation: No API Key");
+    console.warn("Skipping image generation: No API Key found via process.env.API_KEY");
     return null;
   }
 
   try {
+    console.log("Attempting to generate image...");
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
@@ -81,6 +84,7 @@ export const generateImage = async (prompt: string, aspectRatio: "16:9" | "9:16"
     for (const part of response.candidates?.[0]?.content?.parts || []) {
       if (part.inlineData) {
         const base64EncodeString: string = part.inlineData.data;
+        console.log("Image generated successfully.");
         return `data:image/png;base64,${base64EncodeString}`;
       }
     }
