@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Services } from './components/Services';
@@ -12,17 +12,6 @@ function App() {
   const desktopImage = "https://images.unsplash.com/photo-1550523000-843c08272559?q=80&w=2070&auto=format&fit=crop"; 
   const mobileImage = "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1969&auto=format&fit=crop";
 
-  const [aboutBg, setAboutBg] = useState<string>(desktopImage);
-
-  useEffect(() => {
-    const updateImage = () => {
-      setAboutBg(window.innerWidth < 768 ? mobileImage : desktopImage);
-    };
-    updateImage();
-    window.addEventListener('resize', updateImage);
-    return () => window.removeEventListener('resize', updateImage);
-  }, []);
-
   return (
     <div className="min-h-screen bg-brand-dark text-white selection:bg-brand-red selection:text-white">
       <Navbar />
@@ -34,11 +23,14 @@ function App() {
         <section id={SectionId.ABOUT} className="relative py-12 md:py-16 lg:py-20 border-b border-brand-gray overflow-hidden">
             {/* Background for About Section */}
             <div className="absolute inset-0 z-0">
-                <img 
-                  src={aboutBg} 
-                  alt="Clean Garage Workshop" 
-                  className="w-full h-full object-cover opacity-40"
-                />
+                <picture className="block w-full h-full">
+                  <source media="(max-width: 768px)" srcSet={mobileImage} />
+                  <img 
+                    src={desktopImage} 
+                    alt="Clean Garage Workshop" 
+                    className="w-full h-full object-cover opacity-40"
+                  />
+                </picture>
                 {/* Reduced overlay opacity */}
                 <div className="absolute inset-0 bg-brand-dark/85"></div>
             </div>

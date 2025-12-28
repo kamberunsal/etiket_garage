@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MapPin, Phone, Mail, Clock, Instagram } from 'lucide-react';
 import { SectionId } from '../types';
 
@@ -7,26 +7,18 @@ export const Contact: React.FC = () => {
   const desktopImage = "https://images.unsplash.com/photo-1549556238-04d306e98188?q=80&w=2070&auto=format&fit=crop"; 
   const mobileImage = "https://images.unsplash.com/photo-1542223616-9de78bd9f1f4?q=80&w=1974&auto=format&fit=crop";
 
-  const [contactBg, setContactBg] = useState<string>(desktopImage);
-
-  useEffect(() => {
-    const updateImage = () => {
-      setContactBg(window.innerWidth < 768 ? mobileImage : desktopImage);
-    };
-    updateImage();
-    window.addEventListener('resize', updateImage);
-    return () => window.removeEventListener('resize', updateImage);
-  }, []);
-
   return (
     <section id={SectionId.CONTACT} className="relative py-16 md:py-24 bg-[#050505] border-t border-brand-red/10 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-         <img 
-           src={contactBg} 
-           alt="Dark Car Silhouette" 
-           className="w-full h-full object-cover opacity-25"
-         />
+         <picture className="block w-full h-full">
+           <source media="(max-width: 768px)" srcSet={mobileImage} />
+           <img 
+             src={desktopImage} 
+             alt="Dark Car Silhouette" 
+             className="w-full h-full object-cover opacity-25"
+           />
+         </picture>
          <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-brand-dark/80"></div>
       </div>
 

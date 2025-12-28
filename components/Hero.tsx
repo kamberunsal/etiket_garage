@@ -1,29 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, ArrowRight } from 'lucide-react';
 import { SectionId } from '../types';
 
 export const Hero: React.FC = () => {
   // Static Images
-  const desktopImage = "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop"; // Black Supercar with warm lighting
-  const mobileImage = "https://images.unsplash.com/photo-1618359103063-4246b9766946?q=80&w=1964&auto=format&fit=crop"; // Vertical dark aggressive car
-
-  const [bgImage, setBgImage] = useState<string>(desktopImage);
-
-  useEffect(() => {
-    // Simple responsive image selection
-    const updateImage = () => {
-      if (window.innerWidth < 768) {
-        setBgImage(mobileImage);
-      } else {
-        setBgImage(desktopImage);
-      }
-    };
-
-    updateImage();
-    window.addEventListener('resize', updateImage);
-    return () => window.removeEventListener('resize', updateImage);
-  }, []);
+  const desktopImage = "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop"; 
+  // Updated Mobile Image: High contrast dark aesthetic that loads reliably
+  const mobileImage = "https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=1970&auto=format&fit=crop"; 
 
   const smoothScrollTo = (id: string) => {
     const element = document.getElementById(id);
@@ -60,11 +44,14 @@ export const Hero: React.FC = () => {
     <div id={SectionId.HERO} className="relative h-screen w-full overflow-hidden bg-brand-dark flex items-center justify-center">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={bgImage}
-          alt="Luxury Garage Background"
-          className="w-full h-full object-cover opacity-80 scale-105"
-        />
+        <picture className="block w-full h-full">
+          <source media="(max-width: 768px)" srcSet={mobileImage} />
+          <img
+            src={desktopImage}
+            alt="Luxury Garage Background"
+            className="w-full h-full object-cover opacity-80"
+          />
+        </picture>
         
         {/* Overlays for depth and text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-brand-dark/30"></div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Hammer, Sparkles, Layers, Sun, CarFront } from 'lucide-react';
 import { SectionId } from '../types';
@@ -47,26 +47,18 @@ export const Services: React.FC = () => {
   const desktopImage = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop"; 
   const mobileImage = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1974&auto=format&fit=crop";
 
-  const [bgImage, setBgImage] = useState<string>(desktopImage);
-
-  useEffect(() => {
-    const updateImage = () => {
-      setBgImage(window.innerWidth < 768 ? mobileImage : desktopImage);
-    };
-    updateImage();
-    window.addEventListener('resize', updateImage);
-    return () => window.removeEventListener('resize', updateImage);
-  }, []);
-
   return (
     <section id={SectionId.SERVICES} className="py-16 md:py-20 lg:py-24 bg-brand-dark relative overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-         <img 
-           src={bgImage}
-           alt="Car Detail Background" 
-           className="w-full h-full object-cover opacity-30"
-         />
+         <picture className="block w-full h-full">
+           <source media="(max-width: 768px)" srcSet={mobileImage} />
+           <img 
+             src={desktopImage}
+             alt="Car Detail Background" 
+             className="w-full h-full object-cover opacity-30"
+           />
+         </picture>
          <div className="absolute inset-0 bg-brand-dark/85"></div>
       </div>
 
