@@ -5,54 +5,21 @@ import { Services } from './components/Services';
 import { Contact } from './components/Contact';
 import { AIChat } from './components/AIChat';
 import { SectionId } from './types';
-import { generateImage } from './services/geminiService';
 
 function App() {
-  const [aboutBg, setAboutBg] = useState<string | null>(null);
+  // Static Images - Clean Garage / Detail Studio theme
+  const desktopImage = "https://images.unsplash.com/photo-1550523000-843c08272559?q=80&w=2070&auto=format&fit=crop"; 
+  const mobileImage = "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1969&auto=format&fit=crop";
+
+  const [aboutBg, setAboutBg] = useState<string>(desktopImage);
 
   useEffect(() => {
-    const loadAboutImage = async () => {
-      const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'about_bg_mobile_v4' : 'about_bg_desktop_v4';
-
-      let prompt = "";
-      let ratio: "16:9" | "9:16" = "16:9";
-      let fallbackUrl = "";
-
-      if (isMobile) {
-        prompt = "Vertical interior shot of modern high-end auto detailing studio, hexagonal lights on ceiling, clean polished floor reflection, 8k vertical.";
-        ratio = "9:16";
-        fallbackUrl = "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1969&auto=format&fit=crop"; // Auto detail vertical
-      } else {
-        prompt = "Interior of a modern high-end auto detailing studio, bright hexagonal ceiling lights, clean reflections on polished floor, professional workshop environment, depth of field, well lit.";
-        ratio = "16:9";
-        fallbackUrl = "https://images.unsplash.com/photo-1550523000-843c08272559?q=80&w=2070&auto=format&fit=crop"; // Auto detail shop
-      }
-
-      // 1. Check Cache
-      const cachedImage = localStorage.getItem(cacheKey);
-      if (cachedImage) {
-        setAboutBg(cachedImage);
-        return;
-      }
-
-      // 2. Set Fallback Immediately
-      setAboutBg(fallbackUrl);
-
-      // 3. Try AI
-      try {
-        const image = await generateImage(prompt, ratio);
-        if (image) {
-          setAboutBg(image);
-          try {
-            localStorage.setItem(cacheKey, image);
-          } catch (e) { console.warn("Storage full"); }
-        }
-      } catch (e) {
-        console.warn("Using fallback");
-      }
+    const updateImage = () => {
+      setAboutBg(window.innerWidth < 768 ? mobileImage : desktopImage);
     };
-    loadAboutImage();
+    updateImage();
+    window.addEventListener('resize', updateImage);
+    return () => window.removeEventListener('resize', updateImage);
   }, []);
 
   return (
@@ -66,16 +33,11 @@ function App() {
         <section id={SectionId.ABOUT} className="relative py-12 md:py-16 lg:py-20 border-b border-brand-gray overflow-hidden">
             {/* Background for About Section */}
             <div className="absolute inset-0 z-0">
-                {aboutBg ? (
-                  <img 
-                    src={aboutBg} 
-                    alt="Clean Garage Workshop" 
-                    // Increased opacity to 40
-                    className="w-full h-full object-cover opacity-40"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-brand-dark"></div>
-                )}
+                <img 
+                  src={aboutBg} 
+                  alt="Clean Garage Workshop" 
+                  className="w-full h-full object-cover opacity-40"
+                />
                 {/* Reduced overlay opacity */}
                 <div className="absolute inset-0 bg-brand-dark/85"></div>
             </div>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Hammer, Sparkles, Layers, Sun, CarFront } from 'lucide-react';
 import { SectionId } from '../types';
-import { generateImage } from '../services/geminiService';
 
 const services = [
   {
@@ -44,65 +43,31 @@ const services = [
 ];
 
 export const Services: React.FC = () => {
-  const [bgImage, setBgImage] = useState<string | null>(null);
+  // Static Images - Detail/Abstract theme
+  const desktopImage = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop"; 
+  const mobileImage = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1974&auto=format&fit=crop";
+
+  const [bgImage, setBgImage] = useState<string>(desktopImage);
 
   useEffect(() => {
-    const loadServiceImage = async () => {
-      const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'services_bg_mobile_v7_mix' : 'services_bg_desktop_v7_mix';
-      
-      let prompt = "";
-      let ratio: "16:9" | "9:16" = "16:9";
-      let fallbackUrl = "";
-
-      if (isMobile) {
-        prompt = "Vertical macro abstract shot of car paint curves, carbon fiber details, with intertwined orange and red light reflections, dark background, 8k.";
-        ratio = "9:16";
-        fallbackUrl = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1974&auto=format&fit=crop"; 
-      } else {
-        prompt = "Macro close-up abstract shot of a car's glossy paint curve and carbon fiber, dual lighting with orange and red highlights, automotive art, high contrast.";
-        ratio = "16:9";
-        fallbackUrl = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop"; 
-      }
-
-      // 1. Check Cache
-      const cachedImage = localStorage.getItem(cacheKey);
-      if (cachedImage) {
-        setBgImage(cachedImage);
-        return;
-      }
-
-      // 2. Set Fallback Immediately
-      setBgImage(fallbackUrl);
-
-      // 3. Try AI
-      try {
-        const image = await generateImage(prompt, ratio);
-        if (image) {
-          setBgImage(image);
-          try {
-            localStorage.setItem(cacheKey, image);
-          } catch (e) { console.warn("Storage full"); }
-        }
-      } catch (e) {
-        console.warn("Using fallback due to error");
-      }
+    const updateImage = () => {
+      setBgImage(window.innerWidth < 768 ? mobileImage : desktopImage);
     };
-    loadServiceImage();
+    updateImage();
+    window.addEventListener('resize', updateImage);
+    return () => window.removeEventListener('resize', updateImage);
   }, []);
 
   return (
     <section id={SectionId.SERVICES} className="py-16 md:py-20 lg:py-24 bg-brand-dark relative overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-          {bgImage && (
-             <img 
-             src={bgImage}
-             alt="Car Detail Background" 
-             className="w-full h-full object-cover opacity-30"
-           />
-          )}
-           <div className="absolute inset-0 bg-brand-dark/85"></div>
+         <img 
+           src={bgImage}
+           alt="Car Detail Background" 
+           className="w-full h-full object-cover opacity-30"
+         />
+         <div className="absolute inset-0 bg-brand-dark/85"></div>
       </div>
 
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 z-0"></div>

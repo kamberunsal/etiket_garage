@@ -1,68 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Instagram } from 'lucide-react';
 import { SectionId } from '../types';
-import { generateImage } from '../services/geminiService';
 
 export const Contact: React.FC = () => {
-  const [contactBg, setContactBg] = useState<string | null>(null);
+  // Static Images - Night city / Red taillight theme
+  const desktopImage = "https://images.unsplash.com/photo-1549556238-04d306e98188?q=80&w=2070&auto=format&fit=crop"; 
+  const mobileImage = "https://images.unsplash.com/photo-1542223616-9de78bd9f1f4?q=80&w=1974&auto=format&fit=crop";
+
+  const [contactBg, setContactBg] = useState<string>(desktopImage);
 
   useEffect(() => {
-    const loadContactImage = async () => {
-      const isMobile = window.innerWidth < 768;
-      const cacheKey = isMobile ? 'contact_bg_mobile_v7_mix' : 'contact_bg_desktop_v7_mix';
-
-      let prompt = "";
-      let ratio: "16:9" | "9:16" = "16:9";
-      let fallbackUrl = "";
-
-      if (isMobile) {
-        prompt = "Vertical shot of city street at night, rear view of a black sports car with bright red glowing taillights, blurred orange street lights in background, cinematic 8k.";
-        ratio = "9:16";
-        fallbackUrl = "https://images.unsplash.com/photo-1542223616-9de78bd9f1f4?q=80&w=1974&auto=format&fit=crop"; // Warm night city vertical
-      } else {
-        prompt = "City street at night with a luxury car, prominent red taillights, bokeh orange city lights in background, cinematic, atmospheric.";
-        ratio = "16:9";
-        fallbackUrl = "https://images.unsplash.com/photo-1549556238-04d306e98188?q=80&w=2070&auto=format&fit=crop"; // Warm night city horizontal
-      }
-
-      // 1. Check Cache
-      const cachedImage = localStorage.getItem(cacheKey);
-      if (cachedImage) {
-        setContactBg(cachedImage);
-        return;
-      }
-
-      // 2. Set Fallback Immediately
-      setContactBg(fallbackUrl);
-
-      // 3. Try AI
-      try {
-        const image = await generateImage(prompt, ratio);
-        if (image) {
-          setContactBg(image);
-          try {
-            localStorage.setItem(cacheKey, image);
-          } catch (e) { console.warn("Storage full"); }
-        }
-      } catch (e) {
-        console.warn("Using fallback");
-      }
+    const updateImage = () => {
+      setContactBg(window.innerWidth < 768 ? mobileImage : desktopImage);
     };
-    loadContactImage();
+    updateImage();
+    window.addEventListener('resize', updateImage);
+    return () => window.removeEventListener('resize', updateImage);
   }, []);
 
   return (
     <section id={SectionId.CONTACT} className="relative py-16 md:py-24 bg-[#050505] border-t border-brand-red/10 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-          {contactBg && (
-             <img 
-             src={contactBg} 
-             alt="Dark Car Silhouette" 
-             className="w-full h-full object-cover opacity-25"
-           />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-brand-dark/80"></div>
+         <img 
+           src={contactBg} 
+           alt="Dark Car Silhouette" 
+           className="w-full h-full object-cover opacity-25"
+         />
+         <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-brand-dark/80"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
