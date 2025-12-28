@@ -78,6 +78,7 @@ export const Navbar: React.FC = () => {
 
   const rightNavItems = [
     { name: 'HİZMETLER', id: SectionId.SERVICES },
+    { name: 'BLOG', id: SectionId.BLOG },
     { name: 'İLETİŞİM', id: SectionId.CONTACT },
   ];
 

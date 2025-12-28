@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Services } from './components/Services';
+import { Blog } from './components/Blog';
 import { Contact } from './components/Contact';
 import { AIChat } from './components/AIChat';
 import { SectionId } from './types';
@@ -72,6 +73,7 @@ function App() {
         </section>
 
         <Services />
+        <Blog />
         <Contact />
       </main>
 

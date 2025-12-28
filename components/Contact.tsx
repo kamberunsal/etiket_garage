@@ -50,7 +50,7 @@ export const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-display font-bold mb-1">Stüdyo</h4>
-                  <p className="text-gray-400 text-sm">Oto Sanayi Sitesi, 1245. Sokak No:8<br />Maslak, İstanbul</p>
+                  <p className="text-gray-400 text-sm">Göztepe Mah. İstoç 5. Cadde<br />P Blok No:4, İç Kapı: Z13<br />Bağcılar / İstanbul</p>
                 </div>
               </div>
 
@@ -90,7 +90,7 @@ export const Contact: React.FC = () => {
             {/* Using a styled map image to fit the theme */}
             <div className="absolute inset-0 bg-brand-dark/20 z-10 pointer-events-none group-hover:bg-transparent transition-colors duration-500"></div>
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3006.634626573807!2d29.0152!3d41.1124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDA2JzQ0LjYiTiAyOcKwMDAnNTQuNyJF!5e0!3m2!1sen!2str!4v1633000000000!5m2!1sen!2str" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3008.966444005187!2d28.835158!3d41.064575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa55963300001%3A0x0!2zNDHCsDAzJzUyLjQiTiAyOMKwNTAnMDYuNiJF!5e0!3m2!1sen!2str!4v1633000000000!5m2!1sen!2str" 
               width="100%" 
               height="100%" 
               style={{border:0, filter: 'invert(90%) hue-rotate(180deg) contrast(90%)'}} 

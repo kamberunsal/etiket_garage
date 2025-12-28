@@ -15,5 +15,6 @@ export enum SectionId {
   HERO = 'hero',
   SERVICES = 'services',
   ABOUT = 'about',
+  BLOG = 'blog',
   CONTACT = 'contact'
 }
